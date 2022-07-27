@@ -7,7 +7,7 @@ SELECT
     DISTINCT airbyte_projects.gid as external_id,
     NOW() as created,
     NOW() as modified,
-    'e3566198-fbae-4f67-98c4-7868350ce742' as id,
+    UUID('e3566198-fbae-4f67-98c4-7868350ce742') as id,
     '{}' as custom_fields,
     FALSE as disabled,
     'asana' as source,
