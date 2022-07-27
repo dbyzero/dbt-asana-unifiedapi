@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental'
+    -- unique_key='date_day'
+) }}
 
 SELECT 
     DISTINCT airbyte_projects.gid as external_id,
