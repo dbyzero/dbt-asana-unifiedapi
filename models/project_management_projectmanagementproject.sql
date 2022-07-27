@@ -4,6 +4,9 @@
 ) }}
 
 SELECT 
+    NOW() as created,
+    NOW() as updated,
+    get_random_uuid() as id,
     DISTINCT airbyte_projects.gid as external_id,
     '{}' as custom_fields,
     FALSE as disabled,
