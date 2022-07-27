@@ -8,7 +8,7 @@ SELECT
     NOW() as created,
     NOW() as modified,
     UUID('e3566198-fbae-4f67-98c4-7868350ce742') as id,
-    '{}' as custom_fields,
+    jsonb('{}') as custom_fields,
     FALSE as disabled,
     'asana' as source,
     NULL as last_raw_data, -- TODO
