@@ -9,7 +9,7 @@ SELECT
     NOW() as modified,
     UUID('e3566198-fbae-4f67-98c4-7868350ce742') as id,
     'asana' as source,
-    NULL as last_raw_data, 
+    '{}' as last_raw_data, 
     asana_projects.name as name,
     asana_projects_team.name as folder,
     asana_projects.permalink_url as url,
