@@ -9,7 +9,7 @@ SELECT
     NOW() as modified,
     UUID('e3566198-fbae-4f67-98c4-7868350ce742') as id,
     'asana' as source,
-    NULL as last_raw_data, -- TODO
+    NULL as last_raw_data, 
     airbyte_projects.name as name,
     airbyte_projects_team.name as folder,
     airbyte_projects.permalink_url as url,
@@ -19,8 +19,8 @@ SELECT
     NULL as creation_date,
     NULL as begin_date,
     NULL as end_date,
-    NULL as owner_id, -- TODO
-    NULL as integration_id, -- TODO
+    NULL as owner_id, 
+    NULL as integration_id,
 FROM airbyte_projects
     left join airbyte_projects_team on airbyte_projects.team->>'gid' = airbyte_projects_team.gid 
     left join airbyte_users on airbyte_projects.owner->>'gid' = airbyte_users.gid 
