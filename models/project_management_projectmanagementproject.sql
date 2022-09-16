@@ -19,7 +19,8 @@ SELECT
     NULL as begin_date,
     NULL as end_date,
     NULL as owner_id, 
-    NULL as integration_id
+    NULL as integration_id,
+    '{}'::jsonb as last_raw_data 
 FROM asana_projects
     left join asana_projects_team on asana_projects.team->>'gid' = asana_projects_team.gid 
     left join asana_users on asana_projects.owner->>'gid' = asana_users.gid 
