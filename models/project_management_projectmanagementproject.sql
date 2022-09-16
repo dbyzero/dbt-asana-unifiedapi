@@ -21,7 +21,6 @@ SELECT
     NULL as end_date,
     NULL as owner_id, -- TODO
     NULL as integration_id, -- TODO
-    -- '{{ var("intagration_id") }}' as workspace_id
 FROM airbyte_projects
     left join airbyte_projects_team on airbyte_projects.team->>'gid' = airbyte_projects_team.gid 
     left join airbyte_users on airbyte_projects.owner->>'gid' = airbyte_users.gid 
