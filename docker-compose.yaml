@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+    dbt:
+        image: "fishtownanalytics/dbt:1.0.0"
+        volumes:
+            - "./:/usr/app/dbt"
+            - "./profiles.yml:/root/.dbt/profiles.yml"
+        command: run
+        networks:
+            default:
+            db-bridge:
+                aliases: 
+                    - db
+networks:
+    db-bridge:
+        name: db-bridge
+        driver: bridge

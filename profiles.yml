@@ -1,0 +1,17 @@
+config:
+  partial_parse: true
+  printer_width: 120
+  send_anonymous_usage_stats: false
+  use_colors: true
+dbt_asana_uapi:
+  outputs:
+    prod:
+      dbname: customer_824a8e34-9861-4cc3-a710-1b0538b875ab
+      host: db
+      pass: mutiny
+      port: 5432
+      schema: public
+      threads: 1
+      type: postgres
+      user: munityapp
+  target: prod
