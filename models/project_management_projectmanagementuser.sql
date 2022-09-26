@@ -4,14 +4,17 @@
     incremental_strategy='delete+insert',
 ) }}
 
-
 SELECT 
-    DISTINCT asana_users._airbyte_asana_users_hashid as external_id,
+    DISTINCT asana_users.gid as external_id,
     NOW() as created,
     NOW() as modified,
-    nextval('project_management_projectmanagementproject_id_seq'::regclass) as id,
+    md5(
+      asana_users.gid ||
+      'user' ||
+      'asana'
+    )  as id,
     'asana' as source,
-    '{}'::jsonb as last_raw_data, 
+    _airbyte_raw_asana_users._airbyte_data as last_raw_data, 
     asana_users.name as name,
     asana_users.email as email,
     NULL as url,
@@ -28,4 +31,5 @@ SELECT
     NULL::uuid as integration_id
 FROM asana_users
 LEFT JOIN asana_users_photo ON asana_users_photo._airbyte_asana_users_hashid = asana_users._airbyte_asana_users_hashid
+LEFT JOIN _airbyte_raw_asana_users ON _airbyte_raw_asana_users._airbyte_ab_id = asana_users._airbyte_ab_id
 

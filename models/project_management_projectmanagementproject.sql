@@ -5,10 +5,14 @@
 ) }}
 
 SELECT 
-    DISTINCT asana_projects._airbyte_asana_projects_hashid as external_id,
+    DISTINCT asana_projects.gid as external_id,
     NOW() as created,
     NOW() as modified,
-    nextval('project_management_projectmanagementproject_id_seq'::regclass) as id,
+    md5(
+      asana_projects.gid ||
+      'project' ||
+      'asana'
+    )  as id,
     'asana' as source,
     asana_projects.name as name,
     asana_projects_team.name as folder,
@@ -19,9 +23,15 @@ SELECT
     NULL::date as creation_date,
     NULL::date as begin_date,
     NULL::date as end_date,
-    NULL::int as owner_id, 
+    owner.id as owner_id, 
     NULL::uuid as integration_id,
-    '{}'::jsonb as last_raw_data 
+    _airbyte_raw_asana_projects._airbyte_data as last_raw_data 
 FROM asana_projects
-    left join asana_projects_team on asana_projects.team->>'gid' = asana_projects_team.gid 
+    left join asana_projects_team
+        on asana_projects.team->>'gid' = asana_projects_team.gid 
+    left join {{ ref('project_management_projectmanagementuser') }} as owner
+        on owner.external_id = asana_projects.owner->>'gid' and owner.source = 'asana'
+    left join _airbyte_raw_asana_projects
+        on _airbyte_raw_asana_projects._airbyte_ab_id = asana_projects._airbyte_ab_id
+
 WHERE asana_projects.resource_type = 'project'
