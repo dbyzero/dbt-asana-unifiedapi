@@ -18,7 +18,7 @@ SELECT
     asana_projects_team.name as folder,
     asana_projects.permalink_url as url,
     NULL as status,
-    NULL::boolean as private,
+    asana_projects.public IS false as private,
     NULL as description,
     NULL::date as creation_date,
     NULL::date as begin_date,
