@@ -6,12 +6,12 @@ config:
 dbt_asana_uapi:
   outputs:
     prod:
-      dbname: customer_824a8e34-9861-4cc3-a710-1b0538b875ab
-      host: db
-      pass: mutiny
-      port: 5432
+      dbname: customer_f5c82a68-7f55-4fe9-aa2a-b3f43c715143
+      host: 3.tcp.eu.ngrok.io
+      pass: 246f0d6d-b081-4a61-baf5-1b300c27a93c
+      port: 26688
       schema: public
       threads: 1
       type: postgres
-      user: munityapp
+      user: customer_f5c82a68_7f55_4fe9_aa2a_b3f43c715143
   target: prod
