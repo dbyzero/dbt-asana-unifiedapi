@@ -24,7 +24,7 @@ SELECT
     NULL::date as begin_date,
     NULL::date as end_date,
     owner.id as owner_id, 
-    NULL::uuid as integration_id,
+    '{{ var("integration_id") }}'  as integration_id,
     _airbyte_raw_asana_projects._airbyte_data as last_raw_data 
 FROM asana_projects
     left join asana_projects_team

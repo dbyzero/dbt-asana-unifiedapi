@@ -28,7 +28,7 @@ SELECT
     NULL as timezone,
     TRUE as active,
     asana_users_photo.image_128x128 as avatar,
-    NULL::uuid as integration_id
+    '{{ var("integration_id") }}'  as integration_id
 FROM asana_users
 LEFT JOIN asana_users_photo ON asana_users_photo._airbyte_asana_users_hashid = asana_users._airbyte_asana_users_hashid
 LEFT JOIN _airbyte_raw_asana_users ON _airbyte_raw_asana_users._airbyte_ab_id = asana_users._airbyte_ab_id
