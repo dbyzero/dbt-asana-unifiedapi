@@ -21,14 +21,15 @@ SELECT
     NULL as severity,
     asana_tasks.name,
     asana_tasks.notes as description,
-    asana_tasks.resource_type as type,
     NULL::date as due_date,
     asana_tasks.completed_at IS NOT NULL as complete,
     NULL as tags,
     assignee.id as assignee_id,
     NULL as creator_id,
     project.id as project_id,
-    NULL as status_id
+    NULL as status_id,
+    -- asana_tasks.resource_type as type,
+    NULL as type_id
 FROM asana_tasks
     left join {{ ref('project_management_projectmanagementproject') }} as project
         on asana_tasks.projects->0->>'gid' = project.external_id and project.source = 'asana' 
