@@ -6,7 +6,7 @@ services:
         volumes:
             - "./:/usr/app/dbt"
             - "./profiles.yml:/root/.dbt/profiles.yml"
-        command: run
+        command: "run --var='{\"integration_id\": \"25e972ff-f360-4ab7-a198-b55dac4065a4\"}'"
         networks:
             default:
             db-bridge:
