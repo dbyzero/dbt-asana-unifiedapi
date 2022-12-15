@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='external_id',
+    unique_key='id',
     incremental_strategy='delete+insert',
 )}}
 
@@ -9,6 +9,8 @@ SELECT
     NOW() as created,
     NOW() as modified,
     md5(
+      '{{ var("integration_id") }}' ||
+      project.id ||
       asana_tasks.gid ||
       'task' ||
       'asana'
@@ -28,7 +30,7 @@ SELECT
     NULL as creator_id,
     project.id as project_id,
     NULL as status_id,
-    -- asana_tasks.resource_type as type,
+    -- asana_tasks.resource_type as type
     NULL as type_id
 FROM asana_tasks
     left join {{ ref('project_management_projectmanagementproject') }} as project

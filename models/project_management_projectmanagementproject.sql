@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='external_id',
+    unique_key='id',
     incremental_strategy='delete+insert',
 ) }}
 
@@ -9,6 +9,7 @@ SELECT
     NOW() as created,
     NOW() as modified,
     md5(
+      '{{ var("integration_id") }}' ||
       asana_projects.gid ||
       'project' ||
       'asana'
