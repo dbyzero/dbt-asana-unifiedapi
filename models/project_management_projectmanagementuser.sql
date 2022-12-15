@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='id',
+    unique_key='external_id',
     incremental_strategy='delete+insert',
 ) }}
 

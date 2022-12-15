@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='id',
+    unique_key='external_id',
     incremental_strategy='delete+insert',
 )}}
 
@@ -34,9 +34,9 @@ SELECT
     NULL as type_id
 FROM asana_tasks
     left join {{ ref('project_management_projectmanagementproject') }} as project
-        on asana_tasks.projects->0->>'gid' = project.external_id and project.source = 'asana' 
+        on asana_tasks.projects->0->>'gid' = project.external_id and project.source = 'asana' and project.integration_id = '{{ var("integration_id") }}'
     left join {{ ref('project_management_projectmanagementuser') }} as assignee
-        on asana_tasks.assignee->>'gid' = assignee.external_id and assignee.source = 'asana'
+        on asana_tasks.assignee->>'gid' = assignee.external_id and assignee.source = 'asana' and assignee.integration_id = '{{ var("integration_id") }}'
     left join _airbyte_raw_asana_tasks
         on _airbyte_raw_asana_tasks._airbyte_ab_id = asana_tasks._airbyte_ab_id
 WHERE asana_tasks.is_rendered_as_separator = false
