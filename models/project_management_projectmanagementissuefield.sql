@@ -26,7 +26,7 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} cross join (
         types.name as name,
         NULL as description,
         types.type as type,
-        NULL as path
+        types.key as path
     FROM (
         (SELECT 'gid' as key, 'gid' as name, 'string' as type) UNION
         (SELECT 'resource_type' as key, 'Resource Type' as name, 'string' as type) UNION
