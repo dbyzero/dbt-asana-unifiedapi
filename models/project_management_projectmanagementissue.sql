@@ -30,13 +30,20 @@ SELECT
     NULL as creator_id,
     project.id as project_id,
     NULL as status_id,
-    -- asana_tasks.resource_type as type
-    NULL as type_id
+    type.id as type_id
 FROM asana_tasks
     left join {{ ref('project_management_projectmanagementproject') }} as project
-        on asana_tasks.projects->0->>'gid' = project.external_id and project.source = 'asana' and project.integration_id = '{{ var("integration_id") }}'
+        on asana_tasks.projects->0->>'gid' = project.external_id
+        and project.source = 'asana'
+        and project.integration_id = '{{ var("integration_id") }}'
+    LEFT JOIN {{ ref('project_management_projectmanagementissuetype') }} AS type 
+        ON type.external_id = 'issue'
+        AND type.integration_id = '{{ var("integration_id") }}'
+        AND type.project_id = project.id
     left join {{ ref('project_management_projectmanagementuser') }} as assignee
-        on asana_tasks.assignee->>'gid' = assignee.external_id and assignee.source = 'asana' and assignee.integration_id = '{{ var("integration_id") }}'
+        on asana_tasks.assignee->>'gid' = assignee.external_id
+        and assignee.source = 'asana'
+        and assignee.integration_id = '{{ var("integration_id") }}'
     left join _airbyte_raw_asana_tasks
         on _airbyte_raw_asana_tasks._airbyte_ab_id = asana_tasks._airbyte_ab_id
 WHERE asana_tasks.is_rendered_as_separator = false
