@@ -29,10 +29,10 @@ SELECT
     assignee.id as assignee_id,
     NULL as creator_id,
     project.id as project_id,
-    NULL as status_id,
+    status.id as status_id,
     type.id as type_id
 FROM asana_tasks
-    left join {{ ref('project_management_projectmanagementproject') }} as project
+    LEFT JOIN {{ ref('project_management_projectmanagementproject') }} as project
         on asana_tasks.projects->0->>'gid' = project.external_id
         and project.source = 'asana'
         and project.integration_id = '{{ var("integration_id") }}'
@@ -40,6 +40,10 @@ FROM asana_tasks
         ON type.external_id = 'issue'
         AND type.integration_id = '{{ var("integration_id") }}'
         AND type.project_id = project.id
+    LEFT JOIN {{ ref('project_management_projectmanagementissuestatus') }} AS status
+        ON status.external_id = (CASE WHEN asana_tasks.completed_at IS NOT NULL THEN 'completed' ELSE 'todo' END )
+        AND status.integration_id = '{{ var("integration_id") }}'
+        AND status.project_id = project.id
     left join {{ ref('project_management_projectmanagementuser') }} as assignee
         on asana_tasks.assignee->>'gid' = assignee.external_id
         and assignee.source = 'asana'
