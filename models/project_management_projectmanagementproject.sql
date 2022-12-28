@@ -36,3 +36,4 @@ FROM asana_projects
         on _airbyte_raw_asana_projects._airbyte_ab_id = asana_projects._airbyte_ab_id
 
 WHERE asana_projects.resource_type = 'project'
+AND asana_projects.workspace->>'gid' = '{{ var("workspace_id") }}'
