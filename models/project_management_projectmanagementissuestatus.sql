@@ -11,7 +11,7 @@ SELECT
         status_list.external_id ||
         'issuestatusasana'
     ) as id,
-    NULL as meta_status,
+    status_list.name as meta_status,
     status_list.*,
     project_management_projectmanagementproject.id as project_id,
     project_management_projectmanagementproject.integration_id as integration_id
