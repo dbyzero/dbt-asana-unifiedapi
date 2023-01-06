@@ -51,5 +51,8 @@ FROM asana_tasks
         and assignee.integration_id = '{{ var("integration_id") }}'
     left join _airbyte_raw_asana_tasks
         on _airbyte_raw_asana_tasks._airbyte_ab_id = asana_tasks._airbyte_ab_id
-WHERE asana_tasks.is_rendered_as_separator != true
+WHERE (
+    asana_tasks.is_rendered_as_separator = false OR
+    asana_tasks.is_rendered_as_separator IS NULL
+)
 AND asana_tasks.workspace->>'gid' = '{{ var("workspace_id") }}'
