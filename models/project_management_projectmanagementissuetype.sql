@@ -28,7 +28,7 @@ FROM {{ ref('project_management_projectmanagementproject') }} cross join (
         NULL as url,
         NULL as icon
     FROM (
-        (SELECT 'issue' as key, 'Issue' as name)
+        (SELECT 'task' as key, 'Task' as name)
     ) as types
 ) as type_list where integration_id = '{{ var("integration_id") }}'
 

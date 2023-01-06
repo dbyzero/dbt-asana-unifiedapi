@@ -6,7 +6,7 @@ config:
 dbt_asana_uapi:
   outputs:
     prod:
-      dbname: customer_6c3a7c66-a5a1-49c9-8149-0aaa3145affd
+      dbname: customer_9ef8f1c1-70c5-47a2-9d62-7f087640ed74
       host: 3.tcp.eu.ngrok.io
       pass: mutiny
       port: 26688

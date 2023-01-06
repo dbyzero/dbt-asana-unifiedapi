@@ -23,14 +23,15 @@ SELECT
     NULL as severity,
     asana_tasks.name,
     asana_tasks.notes as description,
-    NULL::date as due_date,
+    asana_tasks.due_on::date as due_date,
     asana_tasks.completed_at IS NOT NULL as complete,
     NULL as tags,
     assignee.id as assignee_id,
     NULL as creator_id,
     project.id as project_id,
     status.id as status_id,
-    type.id as type_id
+    type.id as type_id,
+    asana_tasks.resource_subtype = 'milestone' as is_milestone
 FROM asana_tasks
     LEFT JOIN {{ ref('project_management_projectmanagementproject') }} as project
         on asana_tasks.projects->0->>'gid' = project.external_id
@@ -50,5 +51,5 @@ FROM asana_tasks
         and assignee.integration_id = '{{ var("integration_id") }}'
     left join _airbyte_raw_asana_tasks
         on _airbyte_raw_asana_tasks._airbyte_ab_id = asana_tasks._airbyte_ab_id
-WHERE asana_tasks.is_rendered_as_separator = false
+WHERE asana_tasks.is_rendered_as_separator != true
 AND asana_tasks.workspace->>'gid' = '{{ var("workspace_id") }}'
