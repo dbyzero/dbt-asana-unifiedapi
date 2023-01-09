@@ -38,7 +38,7 @@ FROM asana_tasks
         and project.source = 'asana'
         and project.integration_id = '{{ var("integration_id") }}'
     LEFT JOIN {{ ref('project_management_projectmanagementissuetype') }} AS type 
-        ON type.external_id = 'issue'
+        ON type.external_id = 'task'
         AND type.integration_id = '{{ var("integration_id") }}'
         AND type.project_id = project.id
     LEFT JOIN {{ ref('project_management_projectmanagementissuestatus') }} AS status
