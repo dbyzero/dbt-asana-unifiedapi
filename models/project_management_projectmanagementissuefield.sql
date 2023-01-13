@@ -18,11 +18,11 @@ SELECT
     project_management_projectmanagementissuetype.integration_id as integration_id
 FROM {{ ref('project_management_projectmanagementissuetype') }} cross join (
     SELECT  
+        types.key as external_id,
         NOW() as created,
         NOW() as modified,
         'asana' as source,
         '{}'::jsonb as last_raw_data, 
-        types.key as external_id,
         types.name as name,
         NULL as description,
         types.type as type,
@@ -66,5 +66,16 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} cross join (
         (SELECT 'projects' as key, 'Projects' as name, 'array' as type) UNION
         (SELECT 'tags' as key, 'Tags' as name, 'array' as type) UNION
         (SELECT 'workspace' as key, 'Workspace' as name, 'object' as type)
-    ) as types
+    ) as types  union
+    SELECT
+        distinct gid as external_id,
+        NOW() as created,
+        NOW() as modified,
+        'asana' as source,
+        '{}'::jsonb as last_raw_data,
+        name as name,
+        NULL as description,
+        'string' as type,
+        concat('custom_fields[{gid:', gid ,'}].display_value') as path
+    FROM asana_tasks_custom_fields
 ) as type_list where integration_id = '{{ var("integration_id") }}'
