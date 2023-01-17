@@ -9,10 +9,10 @@ SELECT
     NOW() as created,
     NOW() as modified,
     md5(
-      '{{ var("integration_id") }}' ||
       asana_projects.gid ||
       'project' ||
-      'asana'
+      'asana' ||
+      '{{ var("integration_id") }}'
     )  as id,
     'asana' as source,
     asana_projects.name as name,
