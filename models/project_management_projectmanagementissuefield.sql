@@ -76,6 +76,6 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} cross join (
         name as name,
         NULL as description,
         'string' as type,
-        concat('custom_fields[{gid:', gid ,'}].display_value') as path
+        concat('custom_fields[?(@.gid==', gid ,')].display_value') as path
     FROM asana_tasks_custom_fields
 ) as type_list where integration_id = '{{ var("integration_id") }}'
