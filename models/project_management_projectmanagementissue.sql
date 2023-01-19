@@ -33,8 +33,11 @@ SELECT
     type.id as type_id,
     asana_tasks.resource_subtype = 'milestone' as is_milestone
 FROM asana_tasks
+	LEFT JOIN (
+		SELECT jsonb_array_elements(asana_tasks.projects)->>'gid' as groupid , gid FROM asana_tasks
+	) as projects on projects.gid = asana_tasks.gid
     LEFT JOIN {{ ref('project_management_projectmanagementproject') }} as project
-        on asana_tasks.projects->0->>'gid' = project.external_id
+        on projects.groupid = project.external_id
         and project.source = 'asana'
         and project.integration_id = '{{ var("integration_id") }}'
     LEFT JOIN {{ ref('project_management_projectmanagementissuetype') }} AS type 
