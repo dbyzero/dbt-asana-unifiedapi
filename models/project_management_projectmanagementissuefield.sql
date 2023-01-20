@@ -44,7 +44,6 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} cross join (
         (SELECT 'hearted' as key, 'Hearted' as name, 'boolean' as type) UNION
         (SELECT 'hearts' as key, 'Hearts' as name, 'array' as type) UNION
         (SELECT 'html_notes' as key, 'HTML Note' as name, 'string' as type) UNION
-        (SELECT 'is_rendered_as_separator' as key, 'Is a separator' as name, 'boolean' as type) UNION
         (SELECT 'liked' as key, 'Liked' as name, 'boolean' as type) UNION
         (SELECT 'likes' as key, 'Likes' as name, 'array' as type) UNION
         (SELECT 'memberships' as key, 'Memberships' as name, 'array' as type) UNION
@@ -59,23 +58,66 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} cross join (
         (SELECT 'start_on' as key, 'Start on' as name, 'date' as type) UNION
         (SELECT 'assignee' as key, 'Assignee' as name, 'object' as type) UNION
         (SELECT 'assignee_section' as key, 'Assignee section' as name, 'object' as type) UNION
-        (SELECT 'custom_fields' as key, 'Custom fields' as name, 'array' as type) UNION
         (SELECT 'followers' as key, 'Followers' as name, 'array' as type) UNION
         (SELECT 'parent' as key, 'Parent' as name, 'object' as type) UNION
         (SELECT 'permalink_url' as key, 'Permalink url' as name, 'string' as type) UNION
         (SELECT 'projects' as key, 'Projects' as name, 'array' as type) UNION
-        (SELECT 'tags' as key, 'Tags' as name, 'array' as type) UNION
-        (SELECT 'workspace' as key, 'Workspace' as name, 'object' as type)
-    ) as types  union
-    SELECT
-        distinct gid as external_id,
-        NOW() as created,
-        NOW() as modified,
-        'asana' as source,
-        '{}'::jsonb as last_raw_data,
-        name as name,
-        NULL as description,
-        'string' as type,
-        concat('custom_fields[?(@.gid==', gid ,')].display_value') as path
-    FROM asana_tasks_custom_fields
+        (SELECT 'tags' as key, 'Tags' as name, 'array' as type)
+    ) as types
 ) as type_list where integration_id = '{{ var("integration_id") }}'
+UNION
+SELECT
+    md5(
+        project_management_projectmanagementissuetype.integration_id ||
+        project_management_projectmanagementissuetype.project_id ||
+        project_management_projectmanagementissuetype.id ||
+        custom_field_per_project.custom_field_id ||
+        'issuefieldasana'
+    ) as id,
+    custom_field_per_project.custom_field_id as external_id,
+    NOW() as created,
+    NOW() as modified,
+    'asana' as source,
+    '{}'::jsonb as last_raw_data,
+    custom_field_per_project.custom_field_name as external_id,
+    NULL as description,
+    custom_field_per_project.custom_field_type as type,
+    concat('custom_fields[?(@.gid==', custom_field_id ,')].display_value') as path,
+    project_management_projectmanagementissuetype.id as issue_type_id,
+    project_management_projectmanagementissuetype.project_id as project_id,
+    project_management_projectmanagementissuetype.integration_id as integration_id
+FROM {{ ref('project_management_projectmanagementissuetype') }} left join (
+	SELECT 
+		distinct 
+	    md5(
+	      projectid ||
+	      'project' ||
+	      'asana' ||
+          '{{ var("integration_id") }}'
+	    )  as projectid,
+	    'asana' as source,
+		custom_field_id,
+		custom_field_name,
+		custom_field_type
+	FROM (
+		SELECT asana_projects.name as projectname,
+			atcf.gid as custom_field_id,
+			atcf.name as custom_field_name,
+			atcf.type as custom_field_type,
+			projectid, task_gid,
+			tasks._airbyte_asana_tasks_hashid
+		FROM asana_projects
+		LEFT JOIN
+			(SELECT _airbyte_asana_tasks_hashid,
+				jsonb_array_elements(asana_tasks.projects)->>'gid' as projectid ,
+				gid as task_gid
+			FROM asana_tasks
+			) as tasks
+		ON tasks.projectid = asana_projects.gid
+		LEFT JOIN asana_tasks_custom_fields AS atcf
+		ON atcf._airbyte_asana_tasks_hashid  = tasks._airbyte_asana_tasks_hashid
+		) AS custom_list
+	WHERE custom_field_id IS NOT null
+) as custom_field_per_project
+ON project_management_projectmanagementissuetype.project_id = custom_field_per_project.projectid
+where custom_field_id is not NULL
