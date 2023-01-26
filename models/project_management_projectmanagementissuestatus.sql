@@ -13,6 +13,7 @@ SELECT
     ) as id,
     status_list.name as meta_status,
     status_list.*,
+    '{{ var("timestamp") }}' as sync_timestamp,
     project_management_projectmanagementproject.id as project_id,
     project_management_projectmanagementproject.integration_id as integration_id
 FROM {{ ref('project_management_projectmanagementproject') }} cross join (

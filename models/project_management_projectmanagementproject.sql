@@ -8,6 +8,7 @@ SELECT
     DISTINCT asana_projects.gid as external_id,
     NOW() as created,
     NOW() as modified,
+    '{{ var("timestamp") }}' as sync_timestamp,
     md5(
       asana_projects.gid ||
       'project' ||
@@ -34,6 +35,5 @@ FROM asana_projects
         on owner.external_id = asana_projects.owner->>'gid' and owner.source = 'asana' and owner.integration_id = '{{ var("integration_id") }}'
     left join _airbyte_raw_asana_projects
         on _airbyte_raw_asana_projects._airbyte_ab_id = asana_projects._airbyte_ab_id
-
 WHERE asana_projects.resource_type = 'project'
 AND asana_projects.workspace->>'gid' = '{{ var("workspace_id") }}'

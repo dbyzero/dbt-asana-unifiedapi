@@ -13,6 +13,7 @@ SELECT
         'issuefieldasana'
     ) as id,
     type_list.*,
+    '{{ var("timestamp") }}' as sync_timestamp,
     project_management_projectmanagementissuetype.id as issue_type_id,
     project_management_projectmanagementissuetype.project_id as project_id,
     project_management_projectmanagementissuetype.integration_id as integration_id
@@ -84,6 +85,7 @@ SELECT
     -- custom_field_per_project.custom_field_type as type,
     'string' as type,
     concat('custom_fields[?(@.gid==', custom_field_id ,')].display_value') as path,
+    '{{ var("timestamp") }}' as sync_timestamp,
     project_management_projectmanagementissuetype.id as issue_type_id,
     project_management_projectmanagementissuetype.project_id as project_id,
     project_management_projectmanagementissuetype.integration_id as integration_id

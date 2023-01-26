@@ -17,6 +17,7 @@ SELECT
     )  as id,
     'asana' as source,
     '{{ var("integration_id") }}'::uuid as integration_id,
+    '{{ var("timestamp") }}' as sync_timestamp,
     _airbyte_raw_asana_tasks._airbyte_data as last_raw_data, 
     asana_tasks.permalink_url as url,
     NULL as priority,

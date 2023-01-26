@@ -8,6 +8,7 @@ SELECT
     DISTINCT asana_users.gid as external_id,
     NOW() as created,
     NOW() as modified,
+    '{{ var("timestamp") }}' as sync_timestamp,
     md5(
       '{{ var("integration_id") }}' ||
       asana_users.gid ||
