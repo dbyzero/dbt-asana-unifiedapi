@@ -103,22 +103,22 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} left join (
 		custom_field_name,
 		custom_field_type
 	FROM (
-		SELECT asana_projects.name as projectname,
+		SELECT {{ var("table_prefix") }}_projects.name as projectname,
 			atcf.gid as custom_field_id,
 			atcf.name as custom_field_name,
 			atcf.type as custom_field_type,
 			projectid, task_gid,
-			tasks._airbyte_asana_tasks_hashid
-		FROM asana_projects
+			tasks.{{ var("table_prefix") }}_tasks_hashid
+		FROM {{ var("table_prefix") }}_projects
 		LEFT JOIN
-			(SELECT _airbyte_asana_tasks_hashid,
-				jsonb_array_elements(asana_tasks.projects)->>'gid' as projectid ,
+			(SELECT {{ var("table_prefix") }}_tasks_hashid,
+				jsonb_array_elements({{ var("table_prefix") }}_tasks.projects)->>'gid' as projectid ,
 				gid as task_gid
-			FROM asana_tasks
+			FROM {{ var("table_prefix") }}_tasks
 			) as tasks
-		ON tasks.projectid = asana_projects.gid
-		LEFT JOIN asana_tasks_custom_fields AS atcf
-		ON atcf._airbyte_asana_tasks_hashid  = tasks._airbyte_asana_tasks_hashid
+		ON tasks.projectid = {{ var("table_prefix") }}_projects.gid
+		LEFT JOIN {{ var("table_prefix") }}_tasks_custom_fields AS atcf
+		ON atcf.{{ var("table_prefix") }}_tasks_hashid  = tasks.{{ var("table_prefix") }}_tasks_hashid
 		) AS custom_list
 	WHERE custom_field_id IS NOT null
 ) as custom_field_per_project
