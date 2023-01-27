@@ -18,7 +18,7 @@ SELECT
     'asana' as source,
     '{{ var("integration_id") }}'::uuid as integration_id,
     '{{ var("timestamp") }}' as sync_timestamp,
-    {{ var("table_prefix") }}yte_raw_asana_tasks._airbyte_data as last_raw_data, 
+    _airbyte_raw_{{ var("table_prefix") }}_tasks._airbyte_data as last_raw_data, 
     {{ var("table_prefix") }}_tasks.permalink_url as url,
     NULL as priority,
     NULL as severity,
@@ -53,8 +53,8 @@ FROM {{ var("table_prefix") }}_tasks
         on {{ var("table_prefix") }}_tasks.assignee->>'gid' = assignee.external_id
         and assignee.source = 'asana'
         and assignee.integration_id = '{{ var("integration_id") }}'
-    left join {{ var("table_prefix") }}yte_raw_asana_tasks
-        on {{ var("table_prefix") }}yte_raw_asana_tasks._airbyte_ab_id = {{ var("table_prefix") }}_tasks._airbyte_ab_id
+    left join _airbyte_raw_{{ var("table_prefix") }}_tasks
+        on _airbyte_raw_{{ var("table_prefix") }}_tasks._airbyte_ab_id = {{ var("table_prefix") }}_tasks._airbyte_ab_id
 WHERE (
     {{ var("table_prefix") }}_tasks.is_rendered_as_separator = false OR
     {{ var("table_prefix") }}_tasks.is_rendered_as_separator IS NULL
