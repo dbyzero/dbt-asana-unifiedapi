@@ -111,14 +111,14 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} left join (
 			tasks.{{ var("table_prefix") }}_tasks_hashid
 		FROM {{ var("table_prefix") }}_projects
 		LEFT JOIN
-			(SELECT {{ var("table_prefix") }}_tasks_hashid,
+			(SELECT _airbyte_{{ var("table_prefix") }}_tasks_hashid,
 				jsonb_array_elements({{ var("table_prefix") }}_tasks.projects)->>'gid' as projectid ,
 				gid as task_gid
 			FROM {{ var("table_prefix") }}_tasks
 			) as tasks
 		ON tasks.projectid = {{ var("table_prefix") }}_projects.gid
 		LEFT JOIN {{ var("table_prefix") }}_tasks_custom_fields AS atcf
-		ON atcf.{{ var("table_prefix") }}_tasks_hashid  = tasks.{{ var("table_prefix") }}_tasks_hashid
+		ON atcf._airbyte_{{ var("table_prefix") }}_tasks_hashid  = tasks._airbyte_{{ var("table_prefix") }}_tasks_hashid
 		) AS custom_list
 	WHERE custom_field_id IS NOT null
 ) as custom_field_per_project
