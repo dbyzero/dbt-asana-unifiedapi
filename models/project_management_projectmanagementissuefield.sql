@@ -108,7 +108,7 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} left join (
 			atcf.name as custom_field_name,
 			atcf.type as custom_field_type,
 			projectid, task_gid,
-			tasks.{{ var("table_prefix") }}_tasks_hashid
+			tasks._airbyte_{{ var("table_prefix") }}_tasks_hashid
 		FROM {{ var("table_prefix") }}_projects
 		LEFT JOIN
 			(SELECT _airbyte_{{ var("table_prefix") }}_tasks_hashid,
