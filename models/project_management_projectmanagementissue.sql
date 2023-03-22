@@ -27,6 +27,7 @@ SELECT
     "{{ var("table_prefix") }}_tasks".due_on::date as due_date,
     "{{ var("table_prefix") }}_tasks".completed_at IS NOT NULL as complete,
     NULL as tags,
+    NULL as group_id,
     assignee.id as assignee_id,
     NULL as creator_id,
     project.id as project_id,
