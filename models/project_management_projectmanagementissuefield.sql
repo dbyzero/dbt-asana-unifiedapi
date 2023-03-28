@@ -124,3 +124,4 @@ FROM {{ ref('project_management_projectmanagementissuetype') }} left join (
 ) as custom_field_per_project
 ON project_management_projectmanagementissuetype.project_id = custom_field_per_project.projectid
 where custom_field_id is not NULL
+AND project_id IS NOT NULL
