@@ -1,0 +1,17 @@
+config:
+  partial_parse: true
+  printer_width: 120
+  send_anonymous_usage_stats: false
+  use_colors: true
+dbt_asana_uapi:
+  outputs:
+    prod:
+      dbname: "customer_a925c492-fd44-41e2-bd03-692e35b50745"
+      host: "3.tcp.eu.ngrok.io"
+      user: "customer_a925c492_fd44_41e2_bd03_692e35b50745"
+      pass: "83967a89-4bc0-45e0-a7a0-94067332a441"
+      port: 26688
+      schema: public
+      threads: 1
+      type: postgres
+  target: prod
