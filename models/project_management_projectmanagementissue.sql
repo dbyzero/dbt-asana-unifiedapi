@@ -42,6 +42,7 @@ FROM "{{ var("table_prefix") }}_tasks"
         on section."_airbyte_ab_id" = "{{var("table_prefix")}}_tasks"."_airbyte_ab_id"
     left join {{ ref('project_management_projectmanagementgroup')}} as _group
         on _group.external_id = section.section->>'gid'
+        and _group.integration_id = '{{ var("integration_id") }}'
     LEFT JOIN {{ ref('project_management_projectmanagementproject') }} as project
         on projects.groupid = project.external_id
         and project.source = 'asana'
