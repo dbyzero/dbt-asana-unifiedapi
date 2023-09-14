@@ -43,6 +43,7 @@ FROM "{{ var("table_prefix") }}_tasks"
     left join {{ ref('project_management_projectmanagementgroup')}} as _group
         on _group.external_id = section.section->>'gid'
         and _group.integration_id = '{{ var("integration_id") }}'
+        and projects.groupid = _group.project_id
     LEFT JOIN {{ ref('project_management_projectmanagementproject') }} as project
         on projects.groupid = project.external_id
         and project.source = 'asana'
